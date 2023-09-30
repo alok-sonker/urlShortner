@@ -14,6 +14,9 @@ var (
 	urlMap  map[int64]string
 )
 
+func healthCheck(c *gin.Context) {
+	c.String(http.StatusOK, "Welcome to short url service")
+}
 func getAllURL(c *gin.Context) {
 	c.JSON(http.StatusOK, urlMap)
 }
