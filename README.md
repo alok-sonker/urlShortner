@@ -8,6 +8,18 @@ Note : By default this service is using :8080 port
 for using custom port pass port in env 
 
 # APIs List
+> [GET] localhost:8080/ 
+
+    Render basic UI
+
+> [POST] localhost:8080/ 
+
+    REQUEST 
+    Take forms data
+
+    RESPONSE
+    Returns shorten URL
+
 > [GET] localhost:8080/healthCheck 
 
     RESPONSE
