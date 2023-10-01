@@ -1,17 +1,21 @@
 # urlShortner
+# Docker Build
+
+    > docker build -t urlservice1.6 .
+    > docker run --publish 8080:8080 urlservice1.5
+
+Note : By default this service is using :8080 port
+for using custom port pass port in env 
 
 # APIs List
-> [GET] localhost:8080/healthCheck
+> [GET] localhost:8080/healthCheck 
 
     RESPONSE
-    
     200 [String]
     Welcome to short url service
-    
+
 > [POST] localhost:8080/createURL
-
     REQUEST JSON
-
     ```json
     {
     "url":"aloksonker.me"
@@ -27,15 +31,12 @@
 
 
 > [GET] localhost:8080/getURL
-
     REQUEST JSON
-    
     {
         "url":"https://url.com/1000000"
     }
 
     RESPONSE
-    
     200 [String]
     aloksonker.me
 
