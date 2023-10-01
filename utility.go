@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"sort"
 )
 
@@ -26,15 +25,9 @@ func sortMapByValue(urlmap map[string]int32) map[string]int32 {
 	}
 	sort.Sort(p)
 	//p is sorted
-	fmt.Println(p)
 	m := map[string]int32{}
 	for i := len(p) - 1; i >= len(p)-3; i-- {
-		fmt.Printf("%v\t%v\n", p[i].Key, p[i].Value)
-		if i < 3 {
-			m[p[i].Key] = p[i].Value
-			continue
-		}
-		break
+		m[p[i].Key] = p[i].Value
 	}
 	return m
 }
