@@ -64,7 +64,13 @@ func parseURL(url string) (string, error) {
 	return u.Hostname(), nil
 }
 func getMetrics(c *gin.Context) {
-	c.JSON(http.StatusOK, metricsMap)
+	m := map[string]int32{}
+	if len(metricsMap) > 3 {
+		m = sortMapByValue(metricsMap)
+	} else {
+		m = metricsMap
+	}
+	c.JSON(http.StatusOK, m)
 }
 
 func createMapping(url URLJSON) string {
