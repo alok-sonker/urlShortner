@@ -17,11 +17,9 @@ for using custom port pass port in env
 > [POST] localhost:8080/createURL
 
     REQUEST JSON
-    ```json
     {
     "url":"aloksonker.me"
     }
-    ```
     
 
     RESPONSE
