@@ -39,7 +39,7 @@ func createURL(c *gin.Context) {
 	if err != nil {
 		c.String(http.StatusOK, err.Error())
 	}
-	shortURL := createMapping(url)
+	shortURL := createMapping(url.URL)
 	hostName, err := parseURL(url.URL)
 	if err == nil && hostName != "" {
 		if _, ok := metricsMap[hostName]; !ok {
@@ -53,6 +53,35 @@ func createURL(c *gin.Context) {
 		c.String(http.StatusBadRequest, aliasOfURL+shortURL)
 	}
 }
+
+func indexHandler(c *gin.Context) {
+	c.HTML(200, "index.html", nil)
+}
+
+type myForm struct {
+	URL string `form:"url"`
+}
+
+func formHandler(c *gin.Context) {
+	var fakeForm myForm
+	c.Bind(&fakeForm)
+
+	shortURL := createMapping(fakeForm.URL)
+	hostName, err := parseURL(fakeForm.URL)
+	if err == nil && hostName != "" {
+		if _, ok := metricsMap[hostName]; !ok {
+			metricsMap[hostName] = 1
+		} else {
+			metricsMap[hostName]++
+		}
+	}
+
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"url": aliasOfURL + shortURL,
+	})
+	//c.JSON(200, gin.H{"url": fakeForm.URL})
+}
+
 func parseURL(url string) (string, error) {
 	if !strings.Contains(url, "http") {
 		url = "http://" + url
@@ -73,8 +102,8 @@ func getMetrics(c *gin.Context) {
 	c.JSON(http.StatusOK, m)
 }
 
-func createMapping(url URLJSON) string {
-	urlMap[COUNTER] = url.URL
+func createMapping(url string) string {
+	urlMap[COUNTER] = url
 	urlStr := fmt.Sprintf("%v", COUNTER)
 	COUNTER++
 	return urlStr

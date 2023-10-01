@@ -10,4 +10,6 @@ func initRoutes(server *gin.Engine) {
 	server.GET("/getURL", getURL)
 	server.GET("/getAllURL", getAllURL)
 	server.GET("/metrics", getMetrics)
+	server.GET("/", indexHandler)
+	server.POST("/", formHandler)
 }

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            table, th, td {
+               border: 1px solid black;
+               border-collapse: collapse; 
+            }
+            td, th {
+               padding: 10px;
+            }
+         </style>
+        <title>
+        URL Shortner
+        </title>
+    </head>
+   
+    <body>
+
+        <form action="/" method="POST">
+            <p>URL Shortner</p>
+            <input type="textbox" name="url" placeholder="url.com" id="url" />
+            <input type="submit" /></br>
+            <label>{{.url}}</label>
+        </form>
+        <form>
+            <input type="button" value="matrics" onclick="getMetrics()"/>
+        </form>
+        <pre id="myText" ></pre>
+        <script>
+            
+            function getMetrics(){
+                console.log("hello gin");
+                let request = new XMLHttpRequest();
+                request.open("GET","http://localhost:8080/metrics");
+                request.send();
+                request.onload=()=>{
+                    console.log(request);
+                    if (request.status===200){
+                        console.log(JSON.parse(request.response));
+                        data=JSON.parse(request.response)
+                        document.getElementById("myText").innerHTML = JSON.stringify(data, null, 4);
+                        for (var key in data) {
+                            console.log("key ",key," value ",data[key])
+                        }
+                    }else{
+                        console.log(`error ${request.status} ${request.statusText}`);
+                    }
+                }
+
+            }
+            
+            
+            </script>
+    </body>
+</html>
