@@ -2,11 +2,16 @@
 
 # APIs List
 > [GET] localhost:8080/healthCheck
+
     RESPONSE
+    
     200 [String]
     Welcome to short url service
+    
 > [POST] localhost:8080/createURL
+
     REQUEST JSON
+
     ```json
     {
     "url":"aloksonker.me"
@@ -22,12 +27,15 @@
 
 
 > [GET] localhost:8080/getURL
+
     REQUEST JSON
+    
     {
         "url":"https://url.com/1000000"
     }
 
     RESPONSE
+    
     200 [String]
     aloksonker.me
 
