@@ -1,20 +1,30 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.19
+# Build the application from source
+FROM golang:1.19 AS build-stage
 
-# Set destination for COPY
 WORKDIR /app
 
-# Download Go modules
 COPY go.mod go.sum ./
 RUN go mod download
 
 COPY *.go ./
 
-# Build
 RUN CGO_ENABLED=0 GOOS=linux go build -o /urlservice
+
+# Run the tests in the container
+FROM build-stage AS run-test-stage
+RUN go test -v ./...
+
+# Deploy the application binary into a lean image
+FROM gcr.io/distroless/base-debian11 AS build-release-stage
+
+WORKDIR /
+
+COPY --from=build-stage /urlservice /urlservice
 
 EXPOSE 8080
 
-# Run
-CMD ["/urlservice"]
+USER nonroot:nonroot
+
+ENTRYPOINT ["/urlservice"]
