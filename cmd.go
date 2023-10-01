@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,7 +17,12 @@ func execute() error {
 }
 
 func run(server *gin.Engine) error {
-	err := server.Run(":" + fmt.Sprintf("%v", PORT) + "")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = fmt.Sprintf("%v", PORT)
+	}
+	fmt.Println("Listening and serving HTTP on :" + port + " ... ")
+	err := server.Run(":" + port + "")
 	if err != nil {
 		return err
 	}

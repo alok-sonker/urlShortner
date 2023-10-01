@@ -3,8 +3,11 @@
 # Build the application from source
 FROM golang:1.19 AS build-stage
 
-WORKDIR /app
+ARG PORT=8080
 
+RUN echo ${PORT}
+
+WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
@@ -23,8 +26,8 @@ WORKDIR /
 
 COPY --from=build-stage /urlservice /urlservice
 
-EXPOSE 8080
+EXPOSE ${PORT}
 
 USER nonroot:nonroot
 
-ENTRYPOINT ["/urlservice"]
+ENTRYPOINT ["./urlservice"]
