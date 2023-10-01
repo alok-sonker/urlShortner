@@ -15,12 +15,11 @@ for using custom port pass port in env
     Welcome to short url service
 
 > [POST] localhost:8080/createURL
+
     REQUEST JSON
-    ```json
     {
     "url":"aloksonker.me"
     }
-    ```
     
 
     RESPONSE
@@ -31,6 +30,7 @@ for using custom port pass port in env
 
 
 > [GET] localhost:8080/getURL
+
     REQUEST JSON
     {
         "url":"https://url.com/1000000"
