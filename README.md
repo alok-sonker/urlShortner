@@ -1,4 +1,4 @@
-# urlShortner
+# URL Shortner
 # Docker Build
 
     > docker build -t urlservice1.6 .
