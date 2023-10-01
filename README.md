@@ -48,3 +48,12 @@ for using custom port pass port in env
     "1000000": "aloksonker.me"
     }
 
+> [GET] localhost:8080/metrics
+
+    RESPONSE
+    200 [JSON]
+    {
+    "alok.com": 5,
+    "r.com": 5,
+    "t.com": 7
+    }
