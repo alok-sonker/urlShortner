@@ -1,6 +1,7 @@
 package main
 
 import (
+	redis "dep/v2/redis"
 	"fmt"
 	"net/http"
 	parser "net/url"
@@ -11,14 +12,16 @@ import (
 )
 
 var (
-	COUNTER    int64 = 1000000
-	urlMap     map[int64]string
-	metricsMap map[string]int32
+	COUNTER     int64 = 1000000
+	urlMap      map[int64]string
+	metricsMap  map[string]int32
+	redisClient redis.Redis
 )
 
 func init() {
 	urlMap = make(map[int64]string)
 	metricsMap = make(map[string]int32)
+	redisClient = redis.NewRedisClient()
 }
 
 func healthCheck(c *gin.Context) {
@@ -29,7 +32,10 @@ func getAllURL(c *gin.Context) {
 }
 func getURL(c *gin.Context) {
 	url := URLJSON{}
-	c.BindJSON(&url)
+	err := c.BindJSON(&url)
+	if err != nil {
+		return
+	}
 	urlStr := getMappedURL(url.URL)
 	c.String(http.StatusOK, urlStr)
 }
@@ -64,7 +70,10 @@ type myForm struct {
 
 func formHandler(c *gin.Context) {
 	var fakeForm myForm
-	c.Bind(&fakeForm)
+	err := c.Bind(&fakeForm)
+	if err != nil {
+		return
+	}
 
 	shortURL := createMapping(fakeForm.URL)
 	hostName, err := parseURL(fakeForm.URL)
@@ -104,9 +113,14 @@ func getMetrics(c *gin.Context) {
 
 func createMapping(url string) string {
 	urlMap[COUNTER] = url
-	urlStr := fmt.Sprintf("%v", COUNTER)
+
+	counterStr := fmt.Sprintf("%v", COUNTER)
+	err := redisClient.SetValue(counterStr, url)
+	if err != nil {
+		return ""
+	}
 	COUNTER++
-	return urlStr
+	return counterStr
 }
 func getMappedURL(url string) string {
 	idStr := strings.Split(url, aliasOfURL)
@@ -114,7 +128,10 @@ func getMappedURL(url string) string {
 	if err != nil {
 		return ""
 	}
-	if v, ok := urlMap[int64(id)]; ok {
+	//if v, ok := urlMap[int64(id)]; ok {
+	//	return v
+	//}
+	if v, ok := redisClient.GetValue(fmt.Sprintf("%v", id)); ok {
 		return v
 	}
 	return ""
