@@ -3,6 +3,7 @@ package main
 import (
 	redis "dep/v2/redis"
 	"fmt"
+	"log"
 	"net/http"
 	parser "net/url"
 	"strconv"
@@ -45,6 +46,10 @@ func createURL(c *gin.Context) {
 	if err != nil {
 		c.String(http.StatusOK, err.Error())
 	}
+	if url.URL == "" {
+		errorForHTML := "Please enter the URL"
+		log.Println(errorForHTML)
+	}
 	shortURL := createMapping(url.URL)
 	hostName, err := parseURL(url.URL)
 	if err == nil && hostName != "" {
@@ -74,7 +79,14 @@ func formHandler(c *gin.Context) {
 	if err != nil {
 		return
 	}
-
+	if fakeForm.URL == "" {
+		errorForHTML := "Please enter the URL"
+		log.Println(errorForHTML)
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"errorForHTML": errorForHTML,
+		})
+		return
+	}
 	shortURL := createMapping(fakeForm.URL)
 	hostName, err := parseURL(fakeForm.URL)
 	if err == nil && hostName != "" {
@@ -122,6 +134,7 @@ func createMapping(url string) string {
 	COUNTER++
 	return counterStr
 }
+
 func getMappedURL(url string) string {
 	idStr := strings.Split(url, aliasOfURL)
 	id, err := strconv.Atoi(idStr[1])

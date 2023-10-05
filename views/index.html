@@ -1,32 +1,102 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="">
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+
         <style>
+
+            body {
+                margin: 0;
+                background-color: hsl(0, 0%, 98%);
+                color: #333;
+                font: 100% / normal sans-serif;
+                font-family: "Roboto Thin", "open-sans",serif;
+            }
+
+            main {
+                margin: 0 auto;
+                padding: 4rem 0;
+                width: 40%;
+                max-width: 60rem;
+            }
+
+            form {
+                box-sizing: border-box;
+                padding: 2rem;
+                border-radius: 1rem;
+                background-color: hsl(0, 0%, 100%);
+                border: 4px solid hsl(0, 0%, 90%);
+                display:grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+
+            .full-width {
+                grid-column: span 2;
+            }
+            button:focus {
+                outline: none;
+                box-shadow: 0 0 0 4px black;
+            }
             table, th, td {
-               border: 1px solid black;
-               border-collapse: collapse; 
+                border: 1px solid black;
+                border-collapse: collapse;
             }
             td, th {
-               padding: 10px;
+                padding: 10px;
+            }
+            input[type=text] {
+                padding:5px;
+                border:2px solid #ccc;
+                -webkit-border-radius: 5px;
+                border-radius: 5px;
+            }
+
+            input[type=text]:focus {
+                border-color:#333;
+            }
+
+            input[type=submit] {
+                padding:5px 15px;
+                background:#ccc;
+                border:0 none;
+                cursor:pointer;
+                -webkit-border-radius: 5px;
+                border-radius: 5px;
+            }
+            input[type=button] {
+                padding:5px 15px;
+                background:#ccc;
+                border:0 none;
+                cursor:pointer;
+                -webkit-border-radius: 5px;
+                border-radius: 5px;
             }
          </style>
+
         <title>
         URL Shortner
         </title>
     </head>
    
     <body>
-
-        <form action="/" method="POST">
-            <p>URL Shortner</p>
-            <input type="textbox" name="url" placeholder="url.com" id="url" />
-            <input type="submit" /></br>
-            <label>{{.url}}</label>
+    <main>
+        <form action="/" method="POST" >
+            <div class="full-width">
+                <fieldset>
+                    <h3>URL Shortner</h3>
+                    <input type="textbox" name="url" placeholder="URL" id="url" />
+                    <input type="textbox" name="shortedurl" placeholder="Shorted URL" id="shortedurl" value={{.url}} ></br>
+                    <label style="color: darkred">{{.errorForHTML}}</label></br>
+                    <input type="submit" value="Short URL"/>
+                    <input type="button" value="Metrics" onclick="getMetrics()"/>
+                    <pre id="myText" ></pre>
+                </fieldset>
+            </div>
         </form>
-        <form>
-            <input type="button" value="metrics" onclick="getMetrics()"/>
-        </form>
-        <pre id="myText" ></pre>
         <script>
             
             function getMetrics(){
@@ -52,5 +122,6 @@
             
             
             </script>
+        </main>
     </body>
 </html>
