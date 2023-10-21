@@ -95,14 +95,14 @@ func formHandler(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	if fakeForm.URL == "" {
-		errorForHTML := "Please enter the URL"
-		log.Println(errorForHTML)
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"errorForHTML": errorForHTML,
-		})
-		return
-	}
+	//if fakeForm.URL == "" {
+	//	errorForHTML := "Please enter the URL"
+	//	log.Println(errorForHTML)
+	//	c.HTML(http.StatusOK, "index.html", gin.H{
+	//		"errorForHTML": errorForHTML,
+	//	})
+	//	return
+	//}
 	shortURL := createMapping(fakeForm.URL)
 	hostName, err := parseURL(fakeForm.URL)
 	if err == nil && hostName != "" {

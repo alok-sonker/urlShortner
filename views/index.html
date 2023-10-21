@@ -84,15 +84,15 @@
    
     <body>
     <main>
-        <form action="/" method="POST" >
+        <form action="/" method="POST" onsubmit="return checkURL()">
             <div class="full-width">
                 <fieldset>
                     <h3>URL Shortner</h3>
                     <input type="textbox" name="url" placeholder="URL" id="url" />
                     <input type="textbox" name="shortedurl" placeholder="Shorted URL" id="shortedurl" value={{.url}} ></br>
-                    <label style="color: darkred">{{.errorForHTML}}</label>
+<!--                    <label style="color: darkred">{{.errorForHTML}}</label>-->
                     </br>
-                    <input type="submit" value="Short URL"/>
+                    <input type="submit" value="Short URL"  onclick="checkURL()"/>
                     <input type="button" value="Metrics" onclick="getMetrics()"/>
                     <input type="button" value="Original URL" onclick="getOriginalURL()"/>
                     <pre id="myText" ></pre>
@@ -109,7 +109,8 @@
                 request.open("POST","http://localhost:8080/getURL",true);
                 request.setRequestHeader("Content-Type", "application/json");
                 if( document.getElementById("url").value===""){
-                    document.getElementById("myText").innerHTML = "Enter the url";
+                    document.getElementById("myText").innerHTML = "Please enter shorted URL";
+                    document.getElementById("url").focus();
                     return;
                 }
                 let jsonData=JSON.stringify({"url":document.getElementById("url").value});
@@ -147,9 +148,15 @@
                 }
 
             }
-            
-            
-            </script>
+            function checkURL(){
+                console.log("Verify fields");
+                if( document.getElementById("url").value===""){
+                    document.getElementById("myText").innerHTML = "Please enter the url to short";
+                    document.getElementById("url").focus();
+                    return false;
+                }
+            }
+                        </script>
         </main>
     </body>
 </html>
