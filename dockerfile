@@ -1,17 +1,22 @@
 # syntax=docker/dockerfile:1
 
 # Build the application from source
-FROM golang:1.19 AS build-stage
+FROM golang:1.20 AS build-stage
 
 ARG PORT=8080
 
 RUN echo ${PORT}
 
 WORKDIR /app
-COPY go.mod go.sum ./
+# COPY go.mod go.sum ./
+COPY /*  ./
+RUN ls -la /app
 RUN go mod download
+RUN go mod tidy
 
-COPY *.go ./
+
+# COPY *.go ./
+# COPY ./ ./
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o /urlservice
 
@@ -31,3 +36,4 @@ EXPOSE ${PORT}
 USER nonroot:nonroot
 
 ENTRYPOINT ["./urlservice"]
+

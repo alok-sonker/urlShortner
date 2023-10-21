@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	parser "net/url"
+	"os"
+	"os/signal"
 	"strconv"
 	"strings"
 
@@ -23,6 +25,17 @@ func init() {
 	urlMap = make(map[int64]string)
 	metricsMap = make(map[string]int32)
 	redisClient = redis.NewRedisClient()
+	cleanRedis()
+}
+func cleanRedis() {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		<-c
+		redisClient.Client.FlushAll()
+		os.Exit(1)
+	}()
+
 }
 
 func healthCheck(c *gin.Context) {
@@ -35,9 +48,12 @@ func getURL(c *gin.Context) {
 	url := URLJSON{}
 	err := c.BindJSON(&url)
 	if err != nil {
+		log.Println("error ", err)
 		return
 	}
+	log.Println("URL ", url)
 	urlStr := getMappedURL(url.URL)
+	log.Println("URL ", urlStr)
 	c.String(http.StatusOK, urlStr)
 }
 func createURL(c *gin.Context) {
@@ -61,7 +77,7 @@ func createURL(c *gin.Context) {
 	}
 
 	if shortURL != "" {
-		c.String(http.StatusBadRequest, aliasOfURL+shortURL)
+		c.String(http.StatusOK, aliasOfURL+shortURL)
 	}
 }
 
@@ -95,6 +111,12 @@ func formHandler(c *gin.Context) {
 		} else {
 			metricsMap[hostName]++
 		}
+
+		//if v, ok := redisClient.IsThere(); ok {
+		//	shortURL = v
+		//} else {
+		//
+		//}
 	}
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
@@ -131,6 +153,11 @@ func createMapping(url string) string {
 	if err != nil {
 		return ""
 	}
+	//if v, ok := redisClient.IsThere(url); ok {
+	//	shortURL = v
+	//} else {
+
+	//}
 	COUNTER++
 	return counterStr
 }
@@ -147,5 +174,5 @@ func getMappedURL(url string) string {
 	if v, ok := redisClient.GetValue(fmt.Sprintf("%v", id)); ok {
 		return v
 	}
-	return ""
+	return "Not a shorted url"
 }

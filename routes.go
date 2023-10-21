@@ -7,7 +7,7 @@ import (
 func initRoutes(server *gin.Engine) {
 	server.GET("/healthCheck", healthCheck)
 	server.POST("/createURL", createURL)
-	server.GET("/getURL", getURL)
+	server.POST("/getURL", getURL)
 	server.GET("/getAllURL", getAllURL)
 	server.GET("/metrics", getMetrics)
 	server.GET("/", indexHandler)

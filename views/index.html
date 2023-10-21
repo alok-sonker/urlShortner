@@ -90,19 +90,47 @@
                     <h3>URL Shortner</h3>
                     <input type="textbox" name="url" placeholder="URL" id="url" />
                     <input type="textbox" name="shortedurl" placeholder="Shorted URL" id="shortedurl" value={{.url}} ></br>
-                    <label style="color: darkred">{{.errorForHTML}}</label></br>
+                    <label style="color: darkred">{{.errorForHTML}}</label>
+                    </br>
                     <input type="submit" value="Short URL"/>
                     <input type="button" value="Metrics" onclick="getMetrics()"/>
+                    <input type="button" value="Original URL" onclick="getOriginalURL()"/>
                     <pre id="myText" ></pre>
                 </fieldset>
             </div>
         </form>
         <script>
-            
+
+            // {"url":"https://url.com/1000000"}
+
+            function getOriginalURL(){
+                console.log("Get Original URL ");
+                let request = new XMLHttpRequest();
+                request.open("POST","http://localhost:8080/getURL",true);
+                request.setRequestHeader("Content-Type", "application/json");
+                if( document.getElementById("url").value===""){
+                    document.getElementById("myText").innerHTML = "Enter the url";
+                    return;
+                }
+                let jsonData=JSON.stringify({"url":document.getElementById("url").value});
+                console.log(jsonData);
+                request.send(jsonData);
+                request.onload=()=>{
+                    console.log(request);
+                    if (request.status===200){
+                        console.log(request.response);
+                        document.getElementById("myText").innerHTML = request.response;
+                    }else{
+                        console.log(`error ${request.status} ${request.statusText}`);
+                    }
+                }
+
+            }
             function getMetrics(){
-                console.log("hello gin");
+                console.log("Get Metrix Data ");
                 let request = new XMLHttpRequest();
                 request.open("GET","http://localhost:8080/metrics");
+
                 request.send();
                 request.onload=()=>{
                     console.log(request);
