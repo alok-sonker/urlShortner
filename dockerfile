@@ -2,19 +2,22 @@
 
 # Build the application from source
 FROM golang:1.20 AS build-stage
+#FROM golang:1.20.10-alpine3.17 AS build-stage
 
 ARG PORT=8080
-
-RUN echo ${PORT}
-
 WORKDIR /app
 # COPY go.mod go.sum ./
-COPY /*  ./
-RUN ls -la /app
+
+
+
+COPY . .
+
+COPY go.mod go.sum ./
 RUN go mod download
 RUN go mod tidy
 
-
+#RUN go get -v ./...
+#RUN go install -v ./...
 # COPY *.go ./
 # COPY ./ ./
 
@@ -28,12 +31,12 @@ RUN go test -v ./...
 FROM gcr.io/distroless/base-debian11 AS build-release-stage
 
 WORKDIR /
-
+COPY /views/index.html ./views/
 COPY --from=build-stage /urlservice /urlservice
 
 EXPOSE ${PORT}
 
-USER nonroot:nonroot
+
 
 ENTRYPOINT ["./urlservice"]
 

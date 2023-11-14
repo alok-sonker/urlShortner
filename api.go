@@ -10,6 +10,7 @@ import (
 	"os/signal"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -39,7 +40,9 @@ func cleanRedis() {
 }
 
 func healthCheck(c *gin.Context) {
+	time.Sleep(10 * time.Millisecond)
 	c.String(http.StatusOK, "Welcome to short url service")
+
 }
 func getAllURL(c *gin.Context) {
 	c.JSON(http.StatusOK, urlMap)
